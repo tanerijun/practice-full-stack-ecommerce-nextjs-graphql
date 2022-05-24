@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { useQuery, useMutation, gql } from '@apollo/client';
+import { useRouter } from 'next/router';
 import SubHeader from '../../components/SubHeader';
 import ProductItem from '../../components/ProductItem';
 import Button from '../../components/Button';
@@ -18,16 +20,68 @@ const CartItemsWrapper = styled.div`
   width: 100%;
 `;
 
+const GET_CART = gql`
+  query getCart {
+    cart {
+      products {
+        id
+        title
+        price
+        thumbnail
+      }
+    }
+  }
+`;
+
+const COMPLETE_CART = gql`
+  mutation completeCart {
+    completeCart {
+      complete
+    }
+  }
+`;
+
 function Cart() {
+  const { loading, data } = useQuery(GET_CART);
+  const [completeCard] = useMutation(COMPLETE_CART);
+  const route = useRouter();
+
   return (
     <>
-      <SubHeader title='Cart' />
+      <SubHeader title="Cart" />
+      {loading ? (
+        <span>Loading...</span>
+      ) : (
+        <CartWrapper>
+          <CartItemsWrapper>
+            {data &&
+              data.cart.products &&
+              data.cart.products.map((product) => (
+                <ProductItem key={product.id} data={product} />
+              ))}
+          </CartItemsWrapper>
+          {data &&
+            data.cart.products.length > 0 &&
+            sessionStorage.getItem('token') && (
+              <Button
+                backgroundColor="royalBlue"
+                onClick={() => {
+                  const isAuthenticated = sessionStorage.getItem('token');
 
-      <CartWrapper>
-        <CartItemsWrapper></CartItemsWrapper>
-      </CartWrapper>
+                  if (isAuthenticated) {
+                    completeCard();
+                    alert('Thanks! Cart is emptied');
+                    route.push('/');
+                  }
+                }}
+              >
+                Checkout
+              </Button>
+            )}
+        </CartWrapper>
+      )}
     </>
   );
-};
+}
 
 export default Cart;

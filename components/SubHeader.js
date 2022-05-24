@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import Button from './Button';
+import CartButton from './CartButton';
 
 const SubHeaderWrapper = styled.div`
   display: flex;
@@ -28,7 +29,7 @@ function SubHeader({ title, goToCart = false }) {
       <Button onClick={() => router.back()}>{`< Go Back`}</Button>
       <Title>{title}</Title>
       {goToCart && (
-        <Button onClick={() => router.push('/cart')}>Cart (0)</Button>
+        <CartButton onClick={() => router.push('/cart')}>Cart (0)</CartButton>
       )}
     </SubHeaderWrapper>
   );
