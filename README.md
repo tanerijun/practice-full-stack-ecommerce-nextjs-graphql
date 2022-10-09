@@ -1,5 +1,5 @@
-Chapter 7 of Roy Derk's book
+## Experiment
 
-Learning to create a full stack ecommerce app using NextJS and GraphQL
+Creating a full stack ecommerce app using NextJS and GraphQL
 
 also authentication with JWT and GraphQL
